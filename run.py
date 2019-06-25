@@ -6,8 +6,9 @@ import pyocr.builders
 import schedule
 import time
 
+
 def job():
-    
+
     tools = pyocr.get_available_tools()
     if len(tools) == 0:
         print("No OCR tool found")
@@ -31,7 +32,7 @@ def job():
         lang="jpn",
         builder=pyocr.builders.TextBuilder(tesseract_layout=6)
     )
-    print( txt )
+    print(txt)
 
 if __name__ == '__main__':
 
