@@ -2,6 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from multiprocessing import Process
+import run
 
 
 def main():
@@ -16,6 +18,9 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
-
 if __name__ == '__main__':
+    # p1 = Process(target=main)
+    # p1.start()
+    # p2 = Process(target=run.exec_schedule)
+    # p2.start()
     main()
