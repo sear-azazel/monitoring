@@ -1,10 +1,16 @@
 from PIL import Image
 import sys
+import os
 
 import pyocr
 import pyocr.builders
 import schedule
 import time
+
+import django
+
+sys.path.append('monitoring')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'monitoring.settings')
 
 
 def job():
@@ -32,13 +38,23 @@ def job():
         lang="jpn",
         builder=pyocr.builders.TextBuilder(tesseract_layout=6)
     )
+    django.setup()
+    from datas.models import Recognition
+    Recognition.objects.create(recognition_text=txt)
     print(txt)
 
-if __name__ == '__main__':
+
+def exec_schedule():
 
     # 1分毎にjobを実行
-    schedule.every().minute.do(job)
+    # schedule.every().minute.do(job)
+    # 5病毎にjobを実行
+    schedule.every(5).seconds.do(job)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+
+if __name__ == '__main__':
+    exec_schedule()
