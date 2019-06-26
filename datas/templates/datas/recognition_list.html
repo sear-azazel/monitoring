@@ -1,48 +1,101 @@
-<ul>
-    {% for item in object_list %}
-    <li>{{ item.recognition_text }} : {{ item.recognition_date }}</li>
-    {% endfor %}
-</ul>
-<canvas id="ChartDemo" style="width: 50%;"></canvas>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="chartjs-size-monitor"
+   style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+   <div class="chartjs-size-monitor-expand"
+      style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+      <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+   </div>
+   <div class="chartjs-size-monitor-shrink"
+      style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
+      <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
+   </div>
+</div>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+   <h1 class="h2">Dashboard</h1>
+   <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+         <button class="btn btn-sm btn-outline-secondary">Share</button>
+         <button class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
+      <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-calendar">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+         </svg>
+         This week
+      </button>
+   </div>
+</div>
+
+<canvas id="chart" style="width: 80%;"></canvas>
+
+<h2>Results recognition</h2>
+<div class="table-responsive">
+   <table class="table table-striped table-sm">
+      <thead>
+         <tr>
+            <th>#</th>
+            <th>Recognition</th>
+            <th>Date time</th>
+         </tr>
+      </thead>
+         {% for item in object_list %}
+         <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.recognition_text }}</td>
+            <td>{{ item.recognition_date|date:"Y/n/j H:i:s" }}</td>
+         </tr>
+         {% endfor %}
+      <tbody>
+      </tbody>
+   </table>
+</div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
 <script type="text/javascript">
-var data = [
-    {% for item in object_list %}
-    {
-        recognition: "{{ item.recognition_text }}",
-        date: "{{ item.recognition_date }}"
-    },
-    {% endfor %}
+   var data = [
+      {% for item in object_list %}
+   {
+      recognition: "{{ item.recognition_text }}",
+         date: "{{ item.recognition_date }}"
+   },
+   {% endfor %}
 ];
 
-var labels = [
-    {% for item in object_list %}
-    "{{ item.recognition_date }}",
-    {% endfor %}
+   var labels = [
+      {% for item in object_list %}
+   "{{ item.recognition_date|date:'n/j H:i' }}",
+      {% endfor %}
 ]
 
-var datas = [
-    {% for item in object_list %}
-    "{{ item.recognition_text }}",
-    {% endfor %}
+   var datas = [
+      {% for item in object_list %}
+   "{{ item.recognition_text }}",
+      {% endfor %}
 ]
 
-var ctx = document.getElementById("ChartDemo").getContext('2d');
-var ChartDemo = new Chart(ctx, {
-   type: 'line',
-   data: {
-      labels: labels,
-      datasets: [
-      {
-         label: "Chart-1",
-         borderColor: 'rgb(255, 0, 0)',
-         data: datas,
+   var ctx = document.getElementById("chart").getContext('2d');
+   var chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [
+            {
+               label: "Recognition",
+               borderColor: 'rgb(255, 0, 0)',
+               data: datas,
+            },
+         ]
       },
-      ]
-   },
-   options: {
-      responsive: false,
-   }
-});
+      options: {
+         responsive: true,
+      }
+   });
 </script>
+{% endblock %}
