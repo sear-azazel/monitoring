@@ -3,3 +3,46 @@
     <li>{{ item.recognition_text }} : {{ item.recognition_date }}</li>
     {% endfor %}
 </ul>
+<canvas id="ChartDemo" style="width: 50%;"></canvas>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<script type="text/javascript">
+var data = [
+    {% for item in object_list %}
+    {
+        recognition: "{{ item.recognition_text }}",
+        date: "{{ item.recognition_date }}"
+    },
+    {% endfor %}
+];
+
+var labels = [
+    {% for item in object_list %}
+    "{{ item.recognition_date }}",
+    {% endfor %}
+]
+
+var datas = [
+    {% for item in object_list %}
+    "{{ item.recognition_text }}",
+    {% endfor %}
+]
+
+var ctx = document.getElementById("ChartDemo").getContext('2d');
+var ChartDemo = new Chart(ctx, {
+   type: 'line',
+   data: {
+      labels: labels,
+      datasets: [
+      {
+         label: "Chart-1",
+         borderColor: 'rgb(255, 0, 0)',
+         data: datas,
+      },
+      ]
+   },
+   options: {
+      responsive: false,
+   }
+});
+</script>
