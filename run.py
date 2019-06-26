@@ -46,10 +46,10 @@ def job():
 
 def exec_schedule():
 
-    # 1分毎にjobを実行
-    # schedule.every().minute.do(job)
-    # 5病毎にjobを実行
-    schedule.every(5).seconds.do(job)
+    # 10分毎にjobを実行
+    schedule.every(10).minutes.do(job)
+    # 5秒毎にjobを実行
+    # schedule.every(5).seconds.do(job)
 
     while True:
         schedule.run_pending()
