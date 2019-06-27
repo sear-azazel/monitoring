@@ -8,6 +8,8 @@ import schedule
 import time
 
 import django
+import random
+
 
 sys.path.append('monitoring')
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'monitoring.settings')
@@ -33,8 +35,10 @@ def job():
     # to the system locale settings for the default language
     # to use.
 
+    no = random.randrange(20)
+    filename = 'input/image_' + str(no+1).zfill(3) + '.png'
     txt = tool.image_to_string(
-        Image.open('input/image.png'),
+        Image.open(filename),
         lang="jpn",
         builder=pyocr.builders.TextBuilder(tesseract_layout=6)
     )
@@ -46,10 +50,10 @@ def job():
 
 def exec_schedule():
 
-    # 10分毎にjobを実行
-    schedule.every(10).minutes.do(job)
+    # 1分毎にjobを実行
+    schedule.every(1).minutes.do(job)
     # 5秒毎にjobを実行
-    # schedule.every(5).seconds.do(job)
+    # schedule.every(1).seconds.do(job)
 
     while True:
         schedule.run_pending()
